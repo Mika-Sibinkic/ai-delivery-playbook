@@ -1,0 +1,37 @@
+# Stage-gated branching policy
+
+*Loads when: a client demo is scheduled, a second human or contractor joins a project, a repo starts taking real users or revenue, or before pushing directly to main.*
+
+Branching workflow is graded by repo stage, not applied uniformly. Heavy branching ceremony on a solo scratch repo is waste; main-only on a paid-user repo is malpractice. Every project `CLAUDE.md` declares a stage at the top:
+
+```
+STAGE: internal-solo  # or: client-mvp | production
+```
+
+Default when unset = `internal-solo` (assumes nothing external until told otherwise).
+
+## Stages
+
+| Stage | Trigger | Branching rule | CI gate |
+|-------|---------|----------------|---------|
+| `internal-solo` | Only the operator sees/uses it. No client demo, no external user, no shared infra. | Push to `main` direct. Branch only for genuinely risky/throw-away experiments. | Optional. Lint/typecheck nice-to-have. |
+| `client-mvp` | Any of: first client demo scheduled, first second human will touch it, MVP handoff packet being prepared, shared workspace with a forward-deployed engineer or contractor. | Dev branch required for non-trivial changes. PR-to-main with self-review (or a code-reviewer agent) before merge. | Required. Lint + typecheck + tests must pass before merge to main. |
+| `production` | Paying user, public URL with real traffic, or revenue flowing through it. | Feature branches → PR → review → CI green → merge to main. Main = deployed. No direct push. | Required + deploy gate. CI failure blocks merge. Hotfix branches off main. |
+
+## Promotion
+
+Any forward step is a **Tier-2 decision** and triggers an audit-replayable decision record. The promoting agent:
+
+1. Writes `.context/decisions/YYYY-MM-DD-stage-promotion.md` using the schema in `decision-record`
+2. Creates `dev` off current `main` (`git branch dev && git push -u origin dev`)
+3. Wires minimum CI (lint + typecheck + test) if not already present
+4. Updates project `CLAUDE.md` `STAGE:` line
+5. Records the rollback commit hash in the decision record
+
+## Demotion
+
+`client-mvp` → `internal-solo` is also Tier 2. Only allowed if client engagement is formally closed and all client-facing artifacts archived.
+
+## Pre-push grading hook
+
+Before any `git push origin main` on a workspace whose declared (or defaulted) stage is `client-mvp` or `production`, stop and route the change through the stage's branching rule. Direct push to main is a failure mode at those stages.
