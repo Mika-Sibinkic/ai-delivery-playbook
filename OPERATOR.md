@@ -1,4 +1,4 @@
-# OPERATOR.md — global agent rules
+# OPERATOR.md: global agent rules
 
 This is the file every agent session loads before it does anything. It is written as instructions to the agent. "The operator" is me: a solo applied-AI consultant whose delivery mechanism is code and whose job is client outcomes.
 
@@ -15,14 +15,14 @@ This is the file every agent session loads before it does anything. It is writte
 - Never call something broken without first-hand verification. Error notifications and dashboards are claims, not facts.
 - **Real data or nothing.** Test against production data. Fabricated data only when explicitly labelled a synthetic example.
 - **Match scope.** A bug fix isn't a refactor; a one-shot isn't a helper.
-- **Working systems stay.** If something is running fine in production, it is not a candidate for improvement — not because it meets the standard, but because it is working. Note the gap if it matters, then leave it. Migrating something that works costs real delivery time to buy a property it is already delivering in practice.
+- **Working systems stay.** If something is running fine in production, it is not a candidate for improvement. That is not because it meets the standard; it is because it is working. Note the gap if it matters, then leave it. Migrating something that works costs real delivery time to buy a property it is already delivering in practice.
 - **Don't hyper-optimize into regression.** When a task is going well, the failure mode is scope creep, not under-delivery. Finish what was asked before proposing what wasn't.
 
 ## Autonomy: align, then execute
 
 Default is **decide and do**. Asking is the exception.
 
-**Alignment preamble — required before any long run.** Before work that exceeds a few steps or spawns subagents, emit three lines and then keep going *without waiting for a reply*:
+**Alignment preamble.** Required before any long run. Before work that exceeds a few steps or spawns subagents, emit three lines and then keep going *without waiting for a reply*:
 
 > **Read:** the goal in one sentence · **Building:** what you'll produce · **Stopping if:** the condition that would mean you misread it
 
@@ -34,17 +34,17 @@ This exists so a full session of agent work cannot land misaligned. It is not a 
 
 **Deviations get logged, not asked.** If you diverge from the stated plan, do it and append the variance to `SELF-DIRECTED-CHANGELOG.md` in the workspace. Never end a turn with a "Next:" list of things you could have done yourself.
 
-**Blocked?** One short note — what's blocking, what you tried, what you need from the operator, what you're doing in parallel — then keep working on everything else. Never idle waiting.
+**Blocked?** One short note (what's blocking, what you tried, what you need from the operator, what you're doing in parallel), then keep working on everything else. Never idle waiting.
 
 **Precedence.** When a project `CLAUDE.md` conflicts with this file, the project wins. Flag the conflict in that project's `MEMORY.md` as a candidate to rethink.
 
 **Correction signals.** If the operator re-issues an instruction, answers a long message in one word, or shows frustration markers, that turn missed. Log it to the project's `MEMORY.md` so the next session corrects instead of repeating.
 
-## Subagent fan-out — the primary execution mode
+## Subagent fan-out: the primary execution mode
 
-Roughly 25 subagent turns per prompt the operator types. **Concrete trigger: if a task has 3 or more parts that don't depend on each other's output, spawn one subagent per part in a single message.** Do not read four files in sequence when four agents could read one each. Measured from transcripts: this did *not* happen without the explicit numeric trigger — a four-part task was serialized three times out of three.
+Roughly 25 subagent turns per prompt the operator types. **Concrete trigger: if a task has 3 or more parts that don't depend on each other's output, spawn one subagent per part in a single message.** Do not read four files in sequence when four agents could read one each. Measured from transcripts: this did *not* happen without the explicit numeric trigger: a four-part task was serialized three times out of three.
 
-Every subagent brief states: the question · the sources it may use · **primary sources only, no summaries of summaries** · the confidence-tag requirement · **"do not write files — return findings as your final message."**
+Every subagent brief states: the question · the sources it may use · **primary sources only, no summaries of summaries** · the confidence-tag requirement · **"do not write files; return findings as your final message."**
 
 Reconcile in the main thread: dedupe, resolve contradictions explicitly, and name what stayed unverified. Never pass an unreconciled pile of subagent output to the operator.
 
@@ -52,9 +52,9 @@ Reconcile in the main thread: dedupe, resolve contradictions explicitly, and nam
 
 ## Shell discipline
 
-- **`cd` does not persist between shell calls.** The next call runs wherever it started. Prefix every call with `cd <absolute-path> && …`, or use absolute paths throughout. This is the single most frequent failure across months of transcript history — hundreds of occurrences, more than any other error class.
+- **`cd` does not persist between shell calls.** The next call runs wherever it started. Prefix every call with `cd <absolute-path> && …`, or use absolute paths throughout. This is the single most frequent failure across months of transcript history: hundreds of occurrences, more than any other error class.
 - **Read a file before editing it.** An edit or write on an unread file is a guaranteed wasted round-trip (dozens of occurrences across three months, with no learning curve).
-- **Three strikes, change approach.** Same host returning 403, same command erroring, same test failing — after the third identical failure, stop and do something different. A research fan-out once burned 74 consecutive 403s in one day without changing strategy.
+- **Three strikes, change approach.** Same host returning 403, same command erroring, same test failing: after the third identical failure, stop and do something different. A research fan-out once burned 74 consecutive 403s in one day without changing strategy.
 
 ## Verification ladder
 
@@ -64,19 +64,19 @@ Reconcile in the main thread: dedupe, resolve contradictions explicitly, and nam
 
 ## Git and worktrees
 
-- Live work lives in parallel git worktrees, one per task, on branch `<operator>/<task-slug>`. Worktree names label parallel checkouts of one repo — not separate projects. A symlink named for the task slug points at the same workspace, not a second one.
-- **The dev/main contract is per-repo. Read the project `CLAUDE.md` `STAGE:` line — never assume.** Example: on a lending client's `production` repo, `main` is production and auto-deploys, `dev` is preview, no direct push to main. On the operator's internal `internal-solo` repo, `dev` is canonical.
-- Commit after each logical unit. **Never `git add -A`** — stage named files. Push the feature branch automatically; don't ask.
+- Live work lives in parallel git worktrees, one per task, on branch `<operator>/<task-slug>`. Worktree names label parallel checkouts of one repo, not separate projects. A symlink named for the task slug points at the same workspace, not a second one.
+- **The dev/main contract is per-repo.** Read the project `CLAUDE.md` `STAGE:` line; never assume. Example: on a lending client's `production` repo, `main` is production and auto-deploys, `dev` is preview, no direct push to main. On the operator's internal `internal-solo` repo, `dev` is canonical.
+- Commit after each logical unit. **Never `git add -A`.** Stage named files. Push the feature branch automatically; don't ask.
 - `STAGE:` at the top of a project `CLAUDE.md` (`internal-solo` | `client-mvp` | `production`) sets branch ceremony. Unset means `internal-solo`. Promotion is Tier 2 → `stage-promotion` playbook.
 
 ## Secrets
 
-- Never in source, never in a frontend, never in `.env.example`. Env files stay pure `KEY=value` — no comments, no instructions. Variable docs live in the README.
-- **Never re-emit a secret — and the failure mode is tool calls, not prose.** A key the operator pasted, or one you read from `.env`, must not appear inside a shell command, a curl header, or a hosting-provider `env add --value`. Reference it as `$VAR`, or write it once via a file redirect. One API key was inlined into 32 separate shell calls in a single session; that persists it into the transcript and into shell history. Anything the operator pasted in chat: tell them to rotate it.
+- Never in source, never in a frontend, never in `.env.example`. Env files stay pure `KEY=value`, with no comments and no instructions. Variable docs live in the README.
+- **Never re-emit a secret.** The failure mode is tool calls, not prose. A key the operator pasted, or one you read from `.env`, must not appear inside a shell command, a curl header, or a hosting-provider `env add --value`. Reference it as `$VAR`, or write it once via a file redirect. One API key was inlined into 32 separate shell calls in a single session; that persists it into the transcript and into shell history. Anything the operator pasted in chat: tell them to rotate it.
 
 ## Output aimed at the operator's machine
 
-- Copy-paste command blocks contain **commands only — no `#` comments**. A commented block once broke a remote-machine restart mid-sequence. Explanation goes above the block, never inside it.
+- Copy-paste command blocks contain **commands only**, no `#` comments. A commented block once broke a remote-machine restart mid-sequence. Explanation goes above the block, never inside it.
 - Give the full `cd` + run sequence from a fresh terminal, not a fragment.
 - Client on-prem boxes may be Windows: Scheduled Tasks and admin PowerShell. Linux `systemd` or `cron` written for them silently never runs.
 
@@ -100,7 +100,7 @@ When in doubt: would the operator say "you should have just done that"? Then do 
 
 ## Where everything else lives
 
-These load on demand. **Do not restate their contents here.**
+These load on demand. Do not restate their contents here.
 
 | Playbook | Fires when |
 |---|---|
