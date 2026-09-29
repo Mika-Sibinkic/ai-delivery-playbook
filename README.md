@@ -6,7 +6,7 @@ If you want some of what I would call "secret sauce" regarding how I lead ops an
 
 I'm a solo applied-AI consultant, so most of my delivery runs through AI coding agents (really only Claude Code at this point because I love it) working in client repositories, against client infrastructure and live + in-use production data. The whole thesis behind this repo is that an LLM under some sort of rules like these ones produces VERIFIED outcomes, and important artifacts along the way like audit trails and git history that second engineer or contractor can absolutely understand and then pick up from.
 
-If you want it to, this repo can load into your agent. Okay Claude, show time:
+If you want it to, this repo can load into your agent. Okay Claude, take it away.....
 
 
 - `OPERATOR.md` holds the global rules every session reads: the unit of work, the output contract, autonomy boundaries, the verification ladder, decision tiers, secrets and git discipline.
@@ -69,4 +69,4 @@ LICENSE                     MIT
 
 ## License
 
-MIT. Take what is useful.
+MIT; She's all yours.
