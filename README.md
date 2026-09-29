@@ -1,12 +1,13 @@
 # AI Delivery Playbook
 
-The operating rules I run AI coding agents under on client deployments. Written and revised over months of real delivery work, published here with client and infrastructure specifics removed.
+If you want some of what I would call "secret sauce" regarding how I lead ops and core dev for Null Systems, then this is the right place to be. These are rules and common frameworks that I run AI coding agents under on client deployments (MIND PRIVACY AND CLIENT DATA, SO NO NO NO CLOUD MODEL USE EVEN ON REPO READS/FORKS).
 
 ## What this is
 
-I am a solo applied-AI consultant. Most of my delivery runs through AI coding agents (Claude Code) working in client repositories, against client infrastructure and production data. An agent with no rules produces plausible output. An agent under these rules produces verified outcomes, an audit trail, and a git history a second engineer can pick up cold.
+I'm a solo applied-AI consultant, so most of my delivery runs through AI coding agents (really only Claude Code at this point because I love it) working in client repositories, against client infrastructure and live + in-use production data. The whole thesis behind this repo is that an LLM under some sort of rules like these ones produces VERIFIED outcomes, and important artifacts along the way like audit trails and git history that second engineer or contractor can absolutely understand and then pick up from.
 
-This repo is that rulebook, as it actually loads into the agent:
+If you want it to, this repo can load into your agent. Okay Claude, show time:
+
 
 - `OPERATOR.md` holds the global rules every session reads: the unit of work, the output contract, autonomy boundaries, the verification ladder, decision tiers, secrets and git discipline.
 - `playbooks/` holds situational playbooks that load on demand when a decision of that kind comes up (an architecture call, a stage promotion, a client deliverable, a session-end commit).
