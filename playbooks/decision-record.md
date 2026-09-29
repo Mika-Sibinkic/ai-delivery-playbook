@@ -7,7 +7,7 @@ One record per Tier-2 choice. File it at `.context/decisions/YYYY-MM-DD-<slug>.m
 ## Rules
 
 - **Every factual claim carries a confidence tag.** `[VERIFIED]` = first-hand observation or official docs URL in the last 90 days. `[LIKELY]` = strong indirect signal but no first-hand verification. `[UNVERIFIED]` = stated assumption pending validation.
-- **The corroborating signal is NAMED.** A named practitioner source, official docs URL, RFC number, benchmark report, internal probe result. Vague references ("best practice says...") are disqualifying — say WHOSE practice.
+- **The corroborating signal is NAMED.** A named practitioner source, official docs URL, RFC number, benchmark report, internal probe result. Vague references ("best practice says...") are disqualifying; say WHOSE practice.
 - **The rollback commit SHA is declared**, plus the sequence of steps to revert. If the rollback isn't named, the decision cannot be made.
 - Mirrors variant-promotion mechanics: alternative scored, winner promoted, secondary metrics checked for regression, rollback recorded.
 

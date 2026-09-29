@@ -8,9 +8,9 @@ I am a solo applied-AI consultant. Most of my delivery runs through AI coding ag
 
 This repo is that rulebook, as it actually loads into the agent:
 
-- **`OPERATOR.md`** — the global rules every session reads: the unit of work, the output contract, autonomy boundaries, the verification ladder, decision tiers, secrets and git discipline.
-- **`playbooks/`** — situational playbooks that load on demand when a decision of that kind comes up (an architecture call, a stage promotion, a client deliverable, a session-end commit).
-- **`templates/`** — the per-project rules file and the decision-record schema.
+- `OPERATOR.md` holds the global rules every session reads: the unit of work, the output contract, autonomy boundaries, the verification ladder, decision tiers, secrets and git discipline.
+- `playbooks/` holds situational playbooks that load on demand when a decision of that kind comes up (an architecture call, a stage promotion, a client deliverable, a session-end commit).
+- `templates/` holds the per-project rules file and the decision-record schema.
 
 ## Who it is for
 
@@ -41,7 +41,7 @@ This repo is that rulebook, as it actually loads into the agent:
 
 These rules were not designed up front. They were written and rewritten over months of running Claude Code on real client deployments: a lending client's production system, on-prem boxes on client networks, internal automation, and the business-operations side of a consultancy (proposals, scope changes, handoff packets).
 
-The failure modes named in the rules were measured from session transcripts, not guessed. The shell-discipline section exists because losing the working directory between commands was the single most frequent error class across months of sessions. The subagent fan-out trigger has an explicit number in it because, without one, a four-part task was serialized every time it was tried. The rule against commented copy-paste blocks exists because a commented block once broke a remote-machine restart halfway through.
+The failure modes named in the rules were measured from session transcripts rather than guessed. The shell-discipline section exists because losing the working directory between commands was the single most frequent error class across months of sessions. The subagent fan-out trigger has an explicit number in it because, without one, a four-part task was serialized every time it was tried. The rule against commented copy-paste blocks exists because a commented block once broke a remote-machine restart halfway through.
 
 The public version strips client and prospect names, hostnames and network details, people's names other than mine, prices, and the dates of specific incidents. The lessons stay; the identifying details do not.
 
