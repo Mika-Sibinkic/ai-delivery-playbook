@@ -1,6 +1,6 @@
 # AI Delivery Playbook
 
-If you want some of what I would call "secret sauce" regarding how I lead ops and core dev for Null Systems, then this is the right place to be. These are rules and common frameworks that I run AI coding agents under on client deployments (MIND PRIVACY AND CLIENT DATA, SO NO NO NO CLOUD MODEL USE EVEN ON REPO READS/FORKS).
+If you want some of what I would call "secret sauce" regarding how I lead ops and core dev for Null Systems, then this is the right place to be. These are rules and common frameworks that I run AI coding agents under on client deployments (MIND PRIVACY AND CLIENT DATA, SO NO NO NO CLOUD MODEL USAGE EVEN ON REPO READS/FORKS).
 
 ## What this is
 
