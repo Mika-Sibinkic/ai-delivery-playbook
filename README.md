@@ -4,7 +4,7 @@ If you want some of what I would call "secret sauce" regarding how I lead ops an
 
 ## What this is
 
-I'm a solo applied-AI consultant, so most of my delivery runs through AI coding agents (really only Claude Code at this point because I love it) working in client repositories, against client infrastructure and live + in-use production data. The whole thesis behind this repo is that an LLM under some sort of rules like these ones produces VERIFIED outcomes, and important artifacts along the way like audit trails and git history that second engineer or contractor can absolutely understand and then pick up from.
+I'm an applied-AI consultant and part of a team, so most of my delivery runs through AI coding agents (really only Claude Code at this point because I love it) working in client repositories, against client infrastructure and live + in-use production data. The whole thesis behind this repo is that an LLM under some sort of rules like these ones produces VERIFIED outcomes, and important artifacts along the way like audit trails and git history that second engineer or contractor can absolutely understand and then pick up from.
 
 If you want it to, this repo can load into your agent. Okay Claude, take it away.....
 
