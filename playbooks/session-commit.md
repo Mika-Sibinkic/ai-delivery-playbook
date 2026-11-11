@@ -36,12 +36,21 @@ git diff --cached --stat
 
 ```bash
 pat='AKIA[0-9A-Z]{16}|(^|[^A-Za-z0-9])sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Za-z0-9]{36}|github_pat_[A-Za-z0-9_]{22,}|xox[abprs]-[A-Za-z0-9-]{10,}|AIza[0-9A-Za-z_-]{35}|-----BEGIN [A-Z ]*PRIVATE KEY-----'
-if command -v gitleaks >/dev/null; then gitleaks git --staged --redact -v --no-banner; else ! git diff --cached --name-only -z --diff-filter=ACMR | xargs -0 -r git grep --cached -nIE "$pat" -- | cut -d: -f1,2 | grep .; fi
+(
+  set -o pipefail
+  if command -v gitleaks >/dev/null; then exec gitleaks git --staged --redact -v --no-banner; fi
+  hits=$(git diff --cached --name-only -z --diff-filter=ACMR |
+    xargs -0 -r sh -c 'git grep --cached -nIE "$0" -- "$@"; [ $? -le 1 ] || exit 255' "$pat" |
+    cut -d: -f1,2) || { echo "secret scan did not run" >&2; exit 2; }
+  [ -z "$hits" ] || { echo "$hits"; exit 1; }
+)
 ```
 
 Both forms print the file and line of a hit and never the secret itself. The fallback reads the staged content of added and changed files, so a commit that deletes a key passes. Its pattern is the key list from this repo's `scripts/check-docs.sh`; change the two together.
 
-A nonzero exit means a hit. Unstage the file, do not commit, show the operator the file and line, and tell them to rotate the key.
+- Exit 0 and no error message: clean.
+- Exit 1 with `file:line` output (or gitleaks reporting leaks): a hit. Unstage the file, do not commit, show the operator the file and line, and tell them to rotate the key.
+- Exit 2, `secret scan did not run`, or any error message (git `fatal:`, gitleaks `ERR`): the scan did not run. Do not report it clean. Fix the cause and rerun.
 
 ## 4. Run the tests, if the project has them
 
