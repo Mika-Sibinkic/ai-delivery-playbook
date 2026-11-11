@@ -11,13 +11,13 @@ Five pillars. Every architectural and implementation decision is graded against 
 
 Grading question: *"would a security-minded practitioner roast this in public?"*
 
-- **No secrets in source.** Ever. Even commented out. Even in `.env.example`. Anything resembling a real key triggers an immediate stop-and-rotate.
+- **No secrets in source**, including commented-out lines and `.env.example`. Anything resembling a real key triggers an immediate stop-and-rotate.
 - **No secrets in the frontend.** Frontend gets a server-issued, scoped, short-lived token or nothing. Direct API-key-in-React is ship-blocking.
 - **No direct frontend ↔ database.** Always a first-party backend in between. Database row-level security is defense-in-depth, not the only barrier.
 - **Rotate on every personnel change.** Contractor, intern, or vendor leaves → every key they could have touched gets rotated. Verify with the curl-401 check: keep the old key in an env var, never inline, and `curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $OLD_KEY" <auth-check endpoint>` must return 401 or 403.
 - **Server-side proxy + env vars only** for third-party API calls. Move keys to env, create a proxy route, rotate the originals.
 - **Authentication ≠ Authorization.** Every protected route checks BOTH a valid session AND that the actor is permitted to act on the specific resource. Policy is per resource as well as per route.
-- **Spend caps wherever money flows out the door.** Generative-media APIs, LLM providers, payment processors, any infra autoscaler. Even a tiny cap is better than no cap.
+- **Spend caps wherever money flows out the door.** Generative-media APIs, LLM providers, payment processors, any infra autoscaler.
 
 **Probe:** can a fresh engineer with read-only repo access find a working credential? If yes, fail.
 
@@ -39,9 +39,9 @@ The code embodies the same care the product is sold on. Shortcuts that work loca
 
 - **Normalized relational DB schema.** UUIDv7 PKs, FK constraints, indexes on every query path, migration files in repo, no ALTER from a dashboard.
 - **Typed contracts in repo.** OpenAPI YAML for HTTP, SQL DDL for DB, JSON Schema for events. The contract is the source of truth; code generates from it where possible.
-- **CI/CD per the stage table in `stage-promotion`: required from `client-mvp` up.** Where required, every push runs typecheck + lint + test, every merge to main deploys to staging, and no green = no merge.
+- **CI/CD per the stage table in `stage-promotion`: required from `client-mvp` up.** Where required, every push runs typecheck + lint + test, every merge to main deploys (to staging at `client-mvp`; at `production`, main is what is deployed), and no green = no merge.
 - **Version control for everything.** Code, infra (terraform/pulumi), prompts (yes, prompts), workflow-engine flow definitions, env var schemas.
-- **Tests at the boundary that matters most.** Unit for pure logic, integration for DB + external APIs, e2e for the critical-path money flow (for example payment → upload → render → deliver).
+- **Tests at the boundary that matters most.** Unit for pure logic, integration for DB + external APIs, e2e for the critical-path money flow (for example checkout → payment → confirmation email).
 - **Code review by a human OR a second LLM with an adversarial prompt.** Self-review doesn't count. Use a code-reviewer agent for solo work.
 - **One-command local bring-up.** `docker compose up` or equivalent. New engineer is productive in under 30 minutes.
 
@@ -49,16 +49,16 @@ The code embodies the same care the product is sold on. Shortcuts that work loca
 
 ## 4. Throughput
 
-Designed for the load it'll see at year-1 success, not day 1. Hobby-tier infrastructure is not allowed for revenue-generating services.
+Size for the load at year-1 success.
 
-- **Durable execution for background work.** A durable workflow engine or a self-hosted queue-mode worker. Not a starter-tier automation tool, not naked cron, not fire-and-forget HTTP. Jobs survive process restart, deploy, crash.
-- **Retries with exponential backoff + cap.** 3 retries after the first attempt (1s, 4s, 16s), then stop. Idempotency keys on every retryable operation.
-- **Idempotency keys on every external mutation.** Payment provider, send-email, render-video: every external call gets a stable key derived from the order id so retries don't double-charge or double-deliver.
-- **Queue depth + latency metrics surfaced.** P50, P95, P99 for every external-call wrapper. Alert thresholds set before launch, not after the outage.
+- **Durable execution for background work.** A durable workflow engine or a self-hosted queue-mode worker. Jobs must survive process restart, deploy and crash; cron and fire-and-forget HTTP do not.
+- **Retries with exponential backoff + cap.** 3 retries after the first attempt (1s, 4s, 16s), then stop.
+- **Idempotency keys on every retryable operation and every external mutation.** Payment provider, send-email, file delivery: each call gets a stable key derived from the order id so retries don't double-charge or double-deliver.
+- **Queue depth + latency metrics surfaced.** P50, P95, P99 for every external-call wrapper. Set alert thresholds before launch.
 - **No silent failures.** Every retry exhaustion fires an error-tracker event AND writes an `events` row AND triggers the customer-facing failure path.
-- **Caching where the workload allows.** Identical generation prompts → cached output. Identical template renders → cached video. Reduces spend in proportion to the duplicate-request rate.
+- **Caching where the workload allows.** Identical generation prompts → cached output. Reduces spend in proportion to the duplicate-request rate.
 - **Smart routing.** Cheap model first, escalate on quality miss. Premium tier gets the premium model directly. Match cost to revenue.
-- **Reject hobby-plan offerings for production.** Free-tier execution caps, 5-concurrent limits, 10-second function timeouts, no-SLA platforms: all disqualifying for revenue-bearing paths. Free tier is for demos and side projects.
+- **Reject hobby-plan offerings for production.** Free-tier execution caps, 5-concurrent limits, 10-second function timeouts, no-SLA platforms: all disqualifying for revenue-bearing paths.
 
 **Probe:** at projected year-1 peak concurrency, does any single platform's free/starter tier have a hard cap below 5× projected load? If yes, that platform fails throughput for that workload.
 
@@ -77,8 +77,6 @@ A project-level `CLAUDE.md` may override any pillar for a stated reason. Require
 3. The expiry date is named (when the override gets reviewed).
 4. `MEMORY.md` flags the override as a candidate to rethink.
 
-Default-without-override is to apply the bar.
-
 ## Provenance
 
-Checked against the Google SRE book, AWS Well-Architected, the 12-factor app, and Stripe's API design principles. Cost: a few minutes per Tier-2 record, one paid tier per service above hobby, about half an hour of one-time CI setup. Refresh quarterly, on any major model-vendor release, and after any incident. Bar followed and incident still happened means the bar needs a new rule; bar not followed is a process miss.
+Draws on ideas from the Google SRE book, AWS Well-Architected, the 12-factor app and Stripe's API docs; no section is cited and no cost was measured. Refresh quarterly, on any major model-vendor release, and after any incident. Bar followed and incident still happened means the bar needs a new rule; bar not followed is a process miss.
