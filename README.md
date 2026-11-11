@@ -2,39 +2,15 @@
 
 Global rules, on-demand skills and templates for Claude Code, for anyone running AI coding agents on real client work.
 
-If you want some of what I would call "secret sauce" regarding how I lead ops and core dev for Null Systems, then this is the right place to be. These rules and frameworks are derived from the ones I run AI coding agents under on client deployments. The repo holds no client data or credentials; `scripts/check-docs.sh` scans it for home paths, private IPs, emails, machine and tunnel hostnames, and common key formats.
+These rules and frameworks are derived from the ones I run AI coding agents under on client deployments. The repo holds no client data or credentials. `scripts/check-docs.sh` scans it for home paths, private IPs, emails, common key formats, Windows default machine names (`DESKTOP-*`), and Tailscale and Cloudflare quick-tunnel hostnames.
 
 ## What this is
 
-I run Null Systems, an applied-AI consultancy, and most of my delivery runs through AI coding agents (really only Claude Code at this point because I love it) working in client repositories and against client infrastructure. The rules have the agent read production data only through copies, replay clones or read endpoints, treat any write to it as a hard stop, and send client data to a hosted model only with the client's written approval. The whole thesis behind this repo is that an agent under rules like these leaves work that is verified on real infrastructure, plus an audit trail and git history a second engineer or contractor can pick up. Nothing has measured that yet (see Limits).
+I run Null Systems, an applied-AI consultancy. Most of my delivery runs through AI coding agents (really only Claude Code at this point because I love it), working in client repositories and against client infrastructure.
 
-If you want it to, this repo can load into your agent. Read `OPERATOR.md` first: it lets the agent push feature branches, install packages and restart local services without asking.
+The thesis: an agent under these rules leaves work verified on real infrastructure, plus an audit trail and git history a second engineer or contractor can pick up. Nothing has measured that yet (see Limits).
 
-## Who it is for
-
-- Anyone putting AI agents into real delivery work who wants to see a governance layer taken from one in daily use.
-- Teams that need repeatable deployment playbooks and want a concrete example of what "repeatable" means in practice: written down, and rewritten when an incident showed a gap.
-- Me, as a public reference for how I manage AI output.
-
-## Core ideas
-
-- **Unit of work is a client outcome.** Get it to production, verify it, keep git and docs current. (top of `OPERATOR.md`)
-- **Claims carry confidence tags:** `[VERIFIED]`, `[LIKELY]`, `[UNVERIFIED]`. ([Output contract](OPERATOR.md#output-contract))
-- **No skipped rungs:** `TESTED` → `STAGED` → `VERIFIED` → `CONFIRMED`. ([Verification ladder](OPERATOR.md#verification-ladder)) A tag grades how sure a claim is; a rung grades how far the system got. So `[VERIFIED] … is STAGED` is a sure claim about work nobody has yet seen working against real infra.
-- **Decision tiers set who decides,** from "do it" to hard stop. ([Decision tiers](OPERATOR.md#decision-tiers))
-- **Align, then execute:** state the read, the build and the stop condition, then go. ([Autonomy](OPERATOR.md#autonomy-align-then-execute))
-- **Working systems stay, and scope matches the ask.** ([Output contract](OPERATOR.md#output-contract))
-- **The `STAGE:` line sets branch and CI ceremony.** ([Git and worktrees](OPERATOR.md#git-and-worktrees), `playbooks/stage-promotion.md`)
-
-## What it looks like
-
-Synthetic example, written for this README.
-
-```text
-Read: add a CSV export to the invoices page · Building: one endpoint, one button, one test · Stopping if: the client wants a scheduled export
-
-[VERIFIED] CSV export is STAGED: deployed to preview, and the downloaded file has the expected rows. Not VERIFIED until it is seen working against real infra.
-```
+Read `OPERATOR.md` before you load this repo into your agent: it lets the agent push feature branches, install packages and restart local services without asking.
 
 ## Try it in a scratch repo
 
@@ -61,6 +37,15 @@ A first prompt to try:
 ```text
 Give me your alignment preamble for adding a hello-world script with one test, then build it and report which rung of the verification ladder it reached.
 ```
+
+## Core ideas
+
+- **A confidence tag and a ladder rung are separate grades.** A tag (`[VERIFIED]`, `[LIKELY]`, `[UNVERIFIED]`) grades how sure a claim is. A rung (`TESTED` → `STAGED` → `VERIFIED` → `CONFIRMED`) grades how far the system got. So `[VERIFIED] … is STAGED` is a sure claim about work nobody has yet seen working against real infra. ([Output contract](OPERATOR.md#output-contract), [Verification ladder](OPERATOR.md#verification-ladder))
+- **Decision tiers set who decides,** from "do it" to hard stop. ([Decision tiers](OPERATOR.md#decision-tiers))
+- **The `STAGE:` line sets branch and CI ceremony.** ([Git and worktrees](OPERATOR.md#git-and-worktrees), `playbooks/stage-promotion.md`)
+- **Production data is read-only, and client data reaches a hosted model only with the client's written approval.** The agent reads production through copies, replay clones or read endpoints, and any write is a hard stop. ([Secrets and client data](OPERATOR.md#secrets-and-client-data))
+
+The rest is in `OPERATOR.md`.
 
 ## How to adopt it
 
@@ -100,6 +85,7 @@ Steps 1 and 3 never overwrite your copies. To take an update, `git pull` the clo
 - The fan-out rule spends more tokens per task. On API billing, raise the trigger or remove the section.
 - The counts in `OPERATOR.md` come from my private session transcripts. Nothing in this repo lets you reproduce them.
 - No A/B test shows these rules change outcomes.
+- No recorded agent run ships here. The try-it block above is how you see one.
 
 ## Where this came from
 
@@ -107,7 +93,7 @@ I wrote and rewrote these rules over months of running Claude Code on real clien
 
 The failure modes named in the rules come from my session transcripts. The shell-discipline section exists because losing the working directory between commands was the single most frequent error class across months of sessions. The subagent fan-out trigger has an explicit number in it because, without one, a four-part task was serialized every time it was tried. The rule against commented copy-paste blocks exists because a commented block once broke a remote-machine restart halfway through.
 
-The public version strips client and prospect names, hostnames and network details, people's names other than mine, prices, and the dates of specific incidents. It also changes some rules. A few were tightened for general use, for example: browser extensions and free-tier signups need a yes, production data is read-only, a push to a public remote needs a confirm, and session-end commits get a secret scan. So the set here does not match my private one line for line.
+The public version strips client and prospect names, hostnames and network details, people's names other than mine, prices, and the dates of specific incidents. A few rules were tightened for general use, so the set here does not match my private one line for line.
 
 This repo itself was assembled with an AI agent from the private originals, under the private versions of these rules.
 
@@ -127,9 +113,9 @@ templates/
   project-CLAUDE.md         per-repo rules file
   decision-record.md        blank decision record
 scripts/
-  check-docs.sh             backticked playbooks/ and templates/ paths exist, playbooks have skill frontmatter, no home paths, private IPs, emails, hostnames or key formats
+  check-docs.sh             the docs and leak check CI runs
 .github/workflows/
-  docs.yml                  runs scripts/check-docs.sh
+  docs.yml                  runs scripts/check-docs.sh and its self-test
 LICENSE                     MIT
 ```
 
@@ -141,9 +127,10 @@ Before a PR, run the same check CI runs. It needs bash and a git checkout; a ZIP
 
 ```bash
 scripts/check-docs.sh
+scripts/check-docs.sh --self-test
 ```
 
-It prints `check-docs: ok` and exits 0, or names each file that failed (with the line, except for frontmatter) and exits 1. To also catch client or person names without committing them, list them one per line in `.git/info/check-docs-denylist`.
+The first prints `check-docs: ok` and exits 0, or names each file that failed (with the line, except for frontmatter) and exits 1. The second plants one sample per pattern and fails if any sample gets through. The scan catches only the shapes listed at the top of this README. To also catch client names, other hostnames or person names without committing them, list them one per line in `.git/info/check-docs-denylist`.
 
 ## License
 
