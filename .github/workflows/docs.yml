@@ -8,3 +8,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - run: scripts/check-docs.sh
+      - run: scripts/check-docs.sh --self-test
