@@ -13,11 +13,11 @@ Plain-English guidance form. One block per blocker.
 2. **Why it matters.** The concrete consequence if it isn't done, specific to this project. Not "improves reliability" but "the daemon won't come back after the next reboot, so Monday's run silently doesn't happen."
 3. **Your steps.** Numbered, copy-pasteable. Terminal commands inline. URLs as live links.
 
-Skip jargon you haven't defined. Skip pleasantries. Don't lecture. Guide.
+Skip jargon you haven't defined. Skip pleasantries.
 
 ## Copy-paste blocks contain commands ONLY
 
-Never put `#` comments inside a command block. Explanation goes ABOVE the block, in prose; the block is a paste target, not a document. One command per line; if a step needs a value from the operator, use an obvious placeholder and say what it is above the block.
+Never put `#` comments inside a command block. Explanation goes ABOVE the block, in prose, so the block holds only what gets pasted. One command per line; if a step needs a value from the operator, use an obvious placeholder and say what it is above the block.
 
 A commented block once broke a remote-machine restart mid-sequence: pasted whole, the comment lines derailed the shell, and the sequence died halfway. Do not repeat it. In zsh (the macOS default) a pasted `#` line runs as a command unless `interactivecomments` is set; bash and PowerShell treat it as a comment.
 

@@ -23,7 +23,7 @@ Grading question: *"would a security-minded practitioner roast this in public?"*
 
 ## 2. Compliance
 
-Audit trails are not optional. The system answers "who did what when, with what input, producing what output" without a code change.
+Every system keeps an audit trail. It answers "who did what when, with what input, producing what output" without a code change.
 
 - **Append-only event log** per service. Every state-changing action writes an event row with `actor`, `action`, `payload_jsonb` (PII scrubbed), `created_at`. Use the same insert-only `events` table with those four columns in every project, so one audit query works everywhere.
 - **PII scrubbing at the log boundary**, not the storage boundary. Logs reach stdout, error trackers and third parties already redacted. Emails lower-cased and hash-able for cross-system join without revealing the address.
@@ -35,7 +35,7 @@ Audit trails are not optional. The system answers "who did what when, with what 
 
 ## 3. Build quality
 
-The code embodies the same care the product is sold on. Vibe-coded shortcuts that work locally and crater in production are the enemy.
+The code embodies the same care the product is sold on. Shortcuts that work locally and fail in production do not ship.
 
 - **Normalized relational DB schema.** UUIDv7 PKs, FK constraints, indexes on every query path, migration files in repo, no ALTER from a dashboard.
 - **Typed contracts in repo.** OpenAPI YAML for HTTP, SQL DDL for DB, JSON Schema for events. The contract is the source of truth; code generates from it where possible.
@@ -49,7 +49,7 @@ The code embodies the same care the product is sold on. Vibe-coded shortcuts tha
 
 ## 4. Throughput
 
-Designed for the load it'll see at year-1 success, not day 1. Hobby-tier infrastructure is not allowed for revenue-generating services. A business on a hobby plan is stuck the moment it needs to process anything real.
+Designed for the load it'll see at year-1 success, not day 1. Hobby-tier infrastructure is not allowed for revenue-generating services.
 
 - **Durable execution for background work.** A durable workflow engine or a self-hosted queue-mode worker. Not a starter-tier automation tool, not naked cron, not fire-and-forget HTTP. Jobs survive process restart, deploy, crash.
 - **Retries with exponential backoff + cap.** 3 retries after the first attempt (1s, 4s, 16s), then stop. Idempotency keys on every retryable operation.
@@ -81,4 +81,4 @@ Default-without-override is to apply the bar.
 
 ## Provenance
 
-Codified from a curated feed of practitioner signals (a few dozen records, roughly ten high-conviction), cross-referenced against the Google SRE book, AWS Well-Architected, the 12-factor app, and Stripe's API design principles. Cost: a few minutes per Tier-2 record, one paid tier per service above hobby, about half an hour of one-time CI setup. Refresh quarterly, on any major model-vendor release, and after any incident. Bar followed and incident still happened means the bar needs a new rule; bar not followed is a process miss.
+Checked against the Google SRE book, AWS Well-Architected, the 12-factor app, and Stripe's API design principles. Cost: a few minutes per Tier-2 record, one paid tier per service above hobby, about half an hour of one-time CI setup. Refresh quarterly, on any major model-vendor release, and after any incident. Bar followed and incident still happened means the bar needs a new rule; bar not followed is a process miss.
