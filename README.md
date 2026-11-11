@@ -117,7 +117,7 @@ playbooks/
   engineering-bar.md        the pillars every architecture decision is graded against
   decision-record.md        the audit-replayable record for Tier-2 choices
   stage-promotion.md        internal-solo → client-mvp → production, and what changes
-  execution-substrate.md    choosing where background work runs, with a measured kill-test
+  execution-substrate.md    choosing where background work runs
   blocker-walkthrough.md    plain-English guidance form for non-technical handoffs
   client-deliverable.md     packaging anything that goes to a client
   session-commit.md         session-end commit and handoff procedure
@@ -125,7 +125,7 @@ templates/
   project-CLAUDE.md         per-repo rules file
   decision-record.md        blank decision record
 scripts/
-  check-docs.sh             checks the docs; CI runs it
+  check-docs.sh             paths resolve, playbooks load as skills, nothing private ships
 .github/workflows/
   docs.yml                  runs scripts/check-docs.sh
 LICENSE                     MIT
@@ -134,6 +134,14 @@ LICENSE                     MIT
 ## Contributing
 
 Issues are welcome. I won't merge rules that only fit one operator's setup.
+
+Before a PR, run the same check CI runs. It needs only bash and git:
+
+```bash
+scripts/check-docs.sh
+```
+
+It prints `check-docs: ok` and exits 0, or names each file and line that failed and exits 1.
 
 ## License
 

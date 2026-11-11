@@ -32,7 +32,7 @@ The operator pastes AND attaches. Produce both from the same content, every time
    ```bash
    pandoc draft.md -o draft.docx --reference-doc=ref.docx
    ```
-   Pandoc's PDF output needs a LaTeX engine; without one it fails on `pdflatex`. Export the docx to PDF instead. Installing pandoc or `python-docx` under its canonical package name is on the just-do-it list in `OPERATOR.md`.
+   Pandoc's PDF output needs a LaTeX engine; without one it fails on `pdflatex`. Export the docx to PDF instead. Installing pandoc or `python-docx` is on the just-do-it list in `OPERATOR.md`, once you have confirmed the exact name in its official install doc.
 
 The two must not drift. Generate the file from the exact text you showed them.
 
