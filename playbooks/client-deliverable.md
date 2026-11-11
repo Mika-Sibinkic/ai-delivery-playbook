@@ -1,6 +1,9 @@
-# Client deliverable
+---
+name: client-deliverable
+description: 'Use when packaging something that goes to a client: an SOW, scope-change list, handoff packet, status report, proposal, or invoice-adjacent document.'
+---
 
-*Loads when: packaging something that goes to a client: an SOW, scope-change list, handoff packet, status report, proposal, or invoice-adjacent document.*
+# Client deliverable
 
 ## Formatting default
 
@@ -19,7 +22,17 @@ Deviate only when asked for it in that request.
 The operator pastes AND attaches. Produce both from the same content, every time.
 
 1. **Plain text in the response**, formatted to drop straight into an email body. No markdown they'd have to strip: no `**`, no `#`, no backticks.
-2. **The file.** PDF or docx of the same content, matching the formatting default above. Generate files with `pandoc` (md → docx/pdf) or `python-docx`. Install what you need; that is inside the autonomy floor. If no format was named, produce docx and note PDF is one step away.
+2. **The file.** docx or PDF of the same content, matching the formatting default above. If no format was named, produce docx and note PDF is one step away.
+
+   With `pandoc`, build a reference doc once:
+   ```bash
+   pandoc -o ref.docx --print-default-data-file reference.docx
+   ```
+   Open `ref.docx` in Word, set the Normal style to Calibri 12pt with 1.15 line spacing (Body Text and the bullet style inherit from Normal), and save. Then pass it on every build:
+   ```bash
+   pandoc draft.md -o draft.docx --reference-doc=ref.docx
+   ```
+   Pandoc's PDF output needs a LaTeX engine; without one it fails on `pdflatex`. Export the docx to PDF instead. Installing pandoc or `python-docx` under its canonical package name is on the just-do-it list in `OPERATOR.md`.
 
 The two must not drift. Generate the file from the exact text you showed them.
 
@@ -42,6 +55,6 @@ Run every draft through a de-AI editing pass. Strip AI-vocabulary patterns: "del
 - [ ] Humanizer pass done?
 - [ ] Every commitment has an owner and a date?
 - [ ] Every capability claim verified firsthand?
-- [ ] Voice matches the operator's writing guide?
+- [ ] Voice matches your own writing guide, if you keep one?
 
 Publishing anything client-facing is Tier 3. Show the draft. Don't send it.

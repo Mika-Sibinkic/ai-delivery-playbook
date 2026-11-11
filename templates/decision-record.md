@@ -24,6 +24,8 @@ rollback:
 superseded_by: <path to newer decision record, if applicable>
 ---
 
+<!-- Source of truth: playbooks/decision-record.md. Change the schema there first. -->
+
 ## Context
 
 <2-4 sentences on why this decision is being made>

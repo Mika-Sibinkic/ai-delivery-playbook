@@ -1,8 +1,11 @@
+---
+name: decision-record
+description: Use when making an architecture call, swapping a vendor or platform, changing pricing logic, reshaping a client deliverable, promoting a repo stage, or when asked why a past choice was made.
+---
+
 # Tier-2 decision record
 
-*Loads when: making an architecture call, swapping a vendor or platform, changing pricing logic, reshaping a client deliverable, promoting a repo stage, or when asked why a past choice was made.*
-
-One record per Tier-2 choice. File it at `.context/decisions/YYYY-MM-DD-<slug>.md` in the workspace (or `docs/decisions/` in repos with that convention). Tier 0/1 are graded against the engineering bar but generate no standalone record.
+One record per Tier-2 choice. File it at `docs/decisions/YYYY-MM-DD-<slug>.md` in the repo, so it reaches git. Use `.context/decisions/` only if your setup commits `.context/`. Tier 0/1 are graded against the engineering bar but generate no standalone record.
 
 ## Rules
 
@@ -15,7 +18,7 @@ One record per Tier-2 choice. File it at `.context/decisions/YYYY-MM-DD-<slug>.m
 
 ## Template
 
-The blank template lives at `templates/decision-record.md`. Schema:
+The schema is embedded here so this file works on its own as an installed skill. A blank copy also ships in the repo at `templates/decision-record.md`.
 
 ```yaml
 ---
