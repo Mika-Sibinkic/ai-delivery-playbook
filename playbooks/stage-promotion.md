@@ -5,20 +5,20 @@ description: Use when a client demo is scheduled, a second human or contractor j
 
 # Stage-gated branching policy
 
-Branching workflow is graded by repo stage, not applied uniformly. Heavy branching ceremony on a solo scratch repo is waste; main-only on a paid-user repo is malpractice. Every project `CLAUDE.md` declares a stage at the top. The allowed values are `internal-solo`, `client-mvp` and `production`:
+Branching workflow is graded by repo stage, not applied uniformly. A solo scratch repo does not need feature branches and PRs. A repo with paying users needs both. Every project `CLAUDE.md` declares a stage at the top. The allowed values are `internal-solo`, `client-mvp` and `production`:
 
 ```
 STAGE: internal-solo
 ```
 
-Default when unset = `internal-solo` (assumes nothing external until told otherwise).
+Default when unset = `internal-solo` (assumes nothing external until told otherwise). Pushing `main` without asking still needs the line written down; see the push rule in `OPERATOR.md`.
 
 ## Stages
 
 | Stage | Trigger | Branching rule | CI gate |
 |-------|---------|----------------|---------|
 | `internal-solo` | Only the operator sees/uses it. No client demo, no external user, no shared infra. | Push to `main` direct; a repo may declare `dev` canonical in its own `CLAUDE.md`, and that line wins. Branch only for genuinely risky/throw-away experiments. | Optional. Lint/typecheck nice-to-have. |
-| `client-mvp` | Any of: first client demo scheduled, first second human will touch it, MVP handoff packet being prepared, shared workspace with a forward-deployed engineer or contractor. | Dev branch required for non-trivial changes. PR-to-main with self-review (or a code-reviewer agent) before merge. | Required. Lint + typecheck + tests must pass before merge to main. |
+| `client-mvp` | Any of: first client demo scheduled, first second human will touch it, MVP handoff packet being prepared, shared workspace with a forward-deployed engineer or contractor. | Dev branch required for non-trivial changes. PR-to-main reviewed by a human or a code-reviewer agent before merge. | Required. Lint + typecheck + tests must pass before merge to main. |
 | `production` | Paying user, public URL with real traffic, or revenue flowing through it. | Feature branches → PR → review → CI green → merge to main. Main = deployed. No direct push. | Required + deploy gate. CI failure blocks merge. Hotfix branches off main. |
 
 ## Promotion
