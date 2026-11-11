@@ -5,7 +5,7 @@ description: Use when making an architecture call, swapping a vendor or platform
 
 # Tier-2 decision record
 
-One record per Tier-2 choice. File it at `docs/decisions/YYYY-MM-DD-<slug>.md` in the repo, so it reaches git. Use `.context/decisions/` only if your setup commits `.context/`. Tier 0/1 are graded against the engineering bar but generate no standalone record.
+One record per Tier-2 choice. File it at `docs/decisions/YYYY-MM-DD-<slug>.md` in the repo, so it reaches git. Tier 0/1 are graded against the engineering bar but generate no standalone record.
 
 ## Rules
 

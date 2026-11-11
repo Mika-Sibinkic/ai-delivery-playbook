@@ -7,13 +7,13 @@ description: 'Use when packaging something that goes to a client: an SOW, scope-
 
 ## Formatting default
 
-The operator's words: "No prettiness. Just 12pt font, Calibri or Arial, and simple bullets with a 1.15 spacing."
+If the About the operator block in `OPERATOR.md` names a document format, use that. Otherwise use this one, in the operator's words: "No prettiness. Just 12pt font, Calibri or Arial, and simple bullets with a 1.15 spacing."
 
 - 12pt Calibri or Arial.
 - 1.15 line spacing.
 - Simple bullets, one level of nesting max.
 - Bold for section headers only.
-- No color, no cover page, no logos, no decorative rules. Tables only when the data is genuinely tabular.
+- No color, no cover page, no logos, no decorative rules. Tables only when the data is tabular.
 
 Deviate only when asked for it in that request.
 
@@ -46,7 +46,7 @@ Run every draft through a de-AI editing pass. Strip AI-vocabulary patterns: "del
 - **No capability claimed that isn't built and VERIFIED.** Not "should work", not "designed to": you ran it and saw it work. If unverified, cut it or label it as planned scope with a date.
 - Outcomes in the client's terms (hours saved, money, headcount), not implementation detail.
 - Scope-change lists state what changed, why, and the delta in time and cost. Both directions: additions and removals.
-- Assumptions and exclusions written down. What is NOT in scope is as load-bearing as what is.
+- Assumptions and exclusions written down. Write down what is out of scope as carefully as what is in it.
 
 ## Before it goes out
 

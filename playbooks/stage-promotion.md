@@ -17,7 +17,7 @@ Default when unset = `internal-solo` (assumes nothing external until told otherw
 
 | Stage | Trigger | Branching rule | CI gate |
 |-------|---------|----------------|---------|
-| `internal-solo` | Only the operator sees/uses it. No client demo, no external user, no shared infra. | Push to `main` direct; a repo may declare `dev` canonical in its own `CLAUDE.md`, and that line wins. Branch only for genuinely risky/throw-away experiments. | Optional. Lint/typecheck nice-to-have. |
+| `internal-solo` | Only the operator sees/uses it. No client demo, no external user, no shared infra. | Push to `main` direct; a repo may declare `dev` canonical in its own `CLAUDE.md`, and that line wins. Branch only for risky or throwaway experiments. | Optional. Lint/typecheck nice-to-have. |
 | `client-mvp` | Any of: first client demo scheduled, first second human will touch it, MVP handoff packet being prepared, shared workspace with a forward-deployed engineer or contractor. | Dev branch required for non-trivial changes. PR-to-main reviewed by a human or a code-reviewer agent before merge. | Required. Lint + typecheck + tests must pass before merge to main. |
 | `production` | Paying user, public URL with real traffic, or revenue flowing through it. | Feature branches → PR → review → CI green → merge to main. Main = deployed. No direct push. | Required + deploy gate. CI failure blocks merge. Hotfix branches off main. |
 

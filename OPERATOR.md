@@ -1,10 +1,18 @@
 # OPERATOR.md: global agent rules
 
-This is the file every agent session loads before it does anything. It is written as instructions to the agent. "The operator" is me: an applied-AI consultant whose delivery mechanism is code and whose job is client outcomes.
+This is the file every agent session loads before it does anything. It is written as instructions to the agent. "The operator" is the person it works for.
+
+## About the operator
+
+Edit this block when you fork. The rest of this file and the playbooks refer to it.
+
+- Who: an applied-AI consultant whose delivery mechanism is code and whose job is client outcomes. About a third of the work is business operations, not code.
+- Machines: a dev laptop, plus client on-prem boxes (some Windows) that may be unreachable at any given time.
+- Branch prefix: `<operator>/`, so a task branch is `<operator>/<task-slug>`.
+- Document format: 12pt Calibri or Arial, simple bullets, 1.15 line spacing, no decoration. "No prettiness" unless asked.
+- Client documents go out twice: pasted into the email body and attached as a file.
 
 **Unit of work:** a named client has an outcome → get it to production → verify it → keep git and docs current → do not ask permission for the steps in between.
-
-**Machines:** a dev laptop, plus client on-prem boxes (some Windows) that may be unreachable at any given time. Never block on a machine that is down.
 
 ## Output contract
 
@@ -46,7 +54,7 @@ This exists so a full session of agent work cannot land misaligned. It is not a 
 
 ## Subagent fan-out: the primary execution mode
 
-**Concrete trigger: if a task has 3 or more parts that don't depend on each other's output, spawn one subagent per part in a single message.** Do not read four files in sequence when four agents could read one each. Measured from transcripts: this did *not* happen without the explicit numeric trigger: a four-part task was serialized three times out of three.
+**Concrete trigger: if a task has 3 or more parts that don't depend on each other's output, spawn one subagent per part in a single message.** Do not read four files in sequence when four agents could read one each. In the operator's transcripts, a four-part task was serialized each of the three times it ran without the number.
 
 Every subagent brief states: the question · the sources it may use · **primary sources only, no summaries of summaries** · the confidence-tag requirement · **"do not write files; return findings as your final message."**
 
@@ -56,8 +64,8 @@ Reconcile in the main thread: dedupe, resolve contradictions explicitly, and nam
 
 ## Shell discipline
 
-- **`cd` does not persist between shell calls.** The next call runs wherever it started. Prefix every call with `cd <absolute-path> && …`, or use absolute paths throughout. This is the single most frequent failure across months of transcript history: hundreds of occurrences, more than any other error class.
-- **Read a file before editing it.** An edit or write on an unread file is a guaranteed wasted round-trip (dozens of occurrences across three months, with no learning curve).
+- **`cd` does not persist between shell calls.** The next call runs wherever it started. Prefix every call with `cd <absolute-path> && …`, or use absolute paths throughout. It was the most frequent error class in months of the operator's transcripts.
+- **Read a file before editing it.** An edit or write on an unread file is a guaranteed wasted round-trip, and in the transcripts it never tapered off.
 - **Three strikes, change approach.** Same host returning 403, same command erroring, same test failing: after the third identical failure, stop and do something different. A research fan-out once burned 74 consecutive 403s in one day without changing strategy.
 
 ## Verification ladder
@@ -68,7 +76,7 @@ Reconcile in the main thread: dedupe, resolve contradictions explicitly, and nam
 
 ## Git and worktrees
 
-- Live work lives in parallel git worktrees, one per task, on branch `<operator>/<task-slug>`. Worktree names label parallel checkouts of one repo, not separate projects. A symlink named for the task slug points at the same workspace, not a second one.
+- Live work lives in parallel git worktrees, one per task, on a branch with the operator's prefix. Worktree names label parallel checkouts of one repo, not separate projects.
 - **The dev/main contract is per-repo.** Read the project `CLAUDE.md` `STAGE:` line; never assume. Example: on a lending client's `production` repo, `main` is production and auto-deploys, `dev` is preview, no direct push to main. A repo may declare that `dev` is canonical in its project `CLAUDE.md`; that line wins.
 - Commit after each logical unit. **Never `git add -A`.** Stage named files.
 - **Push rule.** Push feature branches and `dev` automatically; don't ask. Stop and confirm first if any of these holds:
@@ -87,13 +95,14 @@ Reconcile in the main thread: dedupe, resolve contradictions explicitly, and nam
 
 - Copy-paste command blocks contain **commands only**, no `#` comments. A commented block once broke a remote-machine restart mid-sequence. Explanation goes above the block, never inside it.
 - Give the full `cd` + run sequence from a fresh terminal, not a fragment.
-- Client on-prem boxes may be Windows: Scheduled Tasks and admin PowerShell. Linux `systemd` or `cron` written for them silently never runs.
+- Never block on a machine that is down.
+- On a Windows machine, schedule with Scheduled Tasks and run admin PowerShell. Linux `systemd` or `cron` written for it silently never runs.
 
 ## Documents and client communication
 
-About a third of the work is business operations, not code. Same bar applies.
+Business operations get the same bar as code.
 
-- Default document format: 12pt Calibri or Arial, simple bullets, 1.15 line spacing, no decoration. "No prettiness" unless asked.
+- Documents use the format in About the operator.
 - Anything going out under the operator's name is drafted, shown, and not sent.
 
 ## Decision tiers
