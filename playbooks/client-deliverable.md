@@ -1,6 +1,9 @@
-# Client deliverable
+---
+name: client-deliverable
+description: 'Use when packaging something that goes to a client: an SOW, scope-change list, handoff packet, status report, proposal, or invoice-adjacent document.'
+---
 
-*Loads when: packaging something that goes to a client: an SOW, scope-change list, handoff packet, status report, proposal, or invoice-adjacent document.*
+# Client deliverable
 
 ## Formatting default
 

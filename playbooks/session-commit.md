@@ -1,6 +1,9 @@
-# Session-end commit and handoff
+---
+name: session-commit
+description: Use when the operator types `/session-commit` or asks to commit, save, or hand off the session for another agent instance to pick up.
+---
 
-*Loads when: the operator types `/session-commit` or asks to commit, save, or hand off the session for another agent instance to pick up.*
+# Session-end commit and handoff
 
 Execute this procedure end-to-end without permission-asking for obvious steps. Be decisive. The goal is a clean handoff that the next agent instance can pick up cold.
 

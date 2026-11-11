@@ -1,6 +1,9 @@
-# Engineering bar
+---
+name: engineering-bar
+description: Use when reviewing code, handling secrets or API keys, designing a database schema, choosing a hosting, queue or CI platform, or judging whether something is production-ready.
+---
 
-*Loads when: reviewing code, handling secrets or API keys, designing a database schema, choosing a hosting, queue or CI platform, or judging whether something is production-ready.*
+# Engineering bar
 
 Five pillars. Every architectural and implementation decision is graded against all five, in every project, unless a project-level `CLAUDE.md` explicitly overrides a pillar.
 
