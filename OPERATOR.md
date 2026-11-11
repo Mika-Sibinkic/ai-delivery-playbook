@@ -122,10 +122,9 @@ These load on demand. Do not restate their contents here.
 
 | Playbook | Fires when |
 |---|---|
-| `engineering-bar` | any architecture, security, schema, throughput, or deploy decision |
+| `engineering-bar` | reviewing code, handling secrets, setting up CI, choosing where background work runs, or judging whether new work is ready to ship |
 | `decision-record` | a Tier-2 choice needs an audit-replayable record |
 | `stage-promotion` | a repo moves internal-solo → client-mvp → production |
-| `execution-substrate` | choosing where background or long-running work runs in something new |
 | `blocker-walkthrough` | two or more blockers, or "walk me through" |
 | `client-deliverable` | SOW, handoff packet, PDF, or docx going to a client |
 | `session-commit` | session-end commit and handoff |

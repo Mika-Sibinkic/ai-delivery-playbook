@@ -12,7 +12,7 @@ Copy this file to the root of a new repo as CLAUDE.md, replace the STAGE placeho
 - `client-mvp`: first client demo, handoff or shared collaborator. Dev branch + PR + CI required.
 - `production`: paying user, public URL with real traffic, or revenue flowing. Feature branch → PR → CI → merge. Main = deployed.
 
-A missing STAGE line, or the placeholder above, counts as unset: `internal-solo` ceremony, but a push to `main` still asks first. Changing the stage is Tier 2: write `docs/decisions/YYYY-MM-DD-stage-promotion.md`. Full policy is in the stage-promotion skill and the build-quality pillar of the engineering-bar skill.
+A missing STAGE line, or the placeholder above, counts as unset: `internal-solo` ceremony, but a push to `main` still asks first. Changing the stage is Tier 2: write `docs/decisions/YYYY-MM-DD-stage-promotion.md`. Full policy is in the stage-promotion skill and the CI section of the engineering-bar skill.
 
 ## What this project is
 
@@ -30,7 +30,7 @@ A missing STAGE line, or the placeholder above, counts as unset: `internal-solo`
 
 ## Stage-specific overrides
 
-<If any engineering-bar pillar is overridden for this project, declare it loudly here with a reason and expiry date. Default-without-override is to apply the full bar. CI is required from client-mvp up. Flag overrides in MEMORY.md as candidates to rethink.>
+<If any engineering-bar line is overridden for this project, declare it loudly here with a reason and expiry date. Default-without-override is to apply the full bar. CI is required from client-mvp up. Flag overrides in MEMORY.md as candidates to rethink.>
 
 ## Critical paths
 

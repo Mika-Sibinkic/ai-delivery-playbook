@@ -117,10 +117,9 @@ This repo itself was assembled with an AI agent from the private originals, unde
 README.md
 OPERATOR.md                 global rules every session reads
 playbooks/
-  engineering-bar.md        the pillars every architecture decision is graded against
+  engineering-bar.md        what new work must pass before it is called done
   decision-record.md        the audit-replayable record for Tier-2 choices
   stage-promotion.md        internal-solo → client-mvp → production, and what changes
-  execution-substrate.md    choosing where background work runs
   blocker-walkthrough.md    plain-English guidance form for non-technical handoffs
   client-deliverable.md     packaging anything that goes to a client
   session-commit.md         session-end commit and handoff procedure
