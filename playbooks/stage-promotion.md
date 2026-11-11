@@ -19,14 +19,14 @@ Default when unset = `internal-solo` (assumes nothing external until told otherw
 |-------|---------|----------------|---------|
 | `internal-solo` | Only the operator sees/uses it. No client demo, no external user, no shared infra. | Push to `main` direct; a repo may declare `dev` canonical in its own `CLAUDE.md`, and that line wins. Branch only for risky or throwaway experiments. | Optional. Lint/typecheck nice-to-have. |
 | `client-mvp` | Any of: first client demo scheduled, first second human will touch it, MVP handoff packet being prepared, shared workspace with a forward-deployed engineer or contractor. | Dev branch required for non-trivial changes. PR-to-main reviewed by a human or a code-reviewer agent before merge. | Required. Lint + typecheck + tests must pass before merge to main. |
-| `production` | Paying user, public URL with real traffic, or revenue flowing through it. | Feature branches → PR → review → CI green → merge to main. Main = deployed. No direct push. | Required + deploy gate. CI failure blocks merge. Hotfix branches off main. |
+| `production` | Paying user, public URL with real traffic, or revenue flowing through it. | Feature branches → PR → review → CI green → merge to main. Main = deployed. No direct push. `dev` stays as the preview branch where the repo has one. | Required + deploy gate. CI failure blocks merge. Hotfix branches off main. |
 
 ## Promotion
 
 Any forward step is a **Tier-2 decision** and triggers an audit-replayable decision record. The promoting agent:
 
 1. Records the rollback commit (`git rev-parse HEAD` before any change) and writes `docs/decisions/YYYY-MM-DD-stage-promotion.md` with it, using the schema in `decision-record`
-2. Creates `dev` off current `main` (`git branch dev && git push -u origin dev`)
+2. If `dev` does not exist yet (the first promotion out of `internal-solo`), creates it off current `main` (`git branch dev && git push -u origin dev`)
 3. Wires minimum CI (lint + typecheck + test) if not already present
 4. Updates project `CLAUDE.md` `STAGE:` line
 
