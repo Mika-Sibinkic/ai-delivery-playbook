@@ -1,15 +1,16 @@
 #!/usr/bin/env bash
-# The repo's definition of working: references resolve, playbooks load as skills, nothing private ships.
+# The repo's definition of working: references resolve, playbooks load as skills, and no home paths,
+# private IPs or common key formats ship. Scans tracked files plus untracked ones git does not ignore.
 set -euo pipefail
 cd "$(dirname "$0")/.."
 fail=0
 err() { echo "check-docs: $*" >&2; fail=1; }
 
-# 1. Every backticked playbooks/*.md or templates/*.md path in a tracked .md file exists.
+# 1. Every backticked playbooks/*.md or templates/*.md path in a .md file exists.
 while IFS=: read -r file ref; do
   path=${ref//\`/}
   [[ -f $path ]] || err "$file: $path does not exist"
-done < <(git ls-files -z '*.md' | xargs -0 grep -oHE '`(playbooks|templates)/[^`]*\.md`')
+done < <(git ls-files -z --cached --others --exclude-standard '*.md' | xargs -0 grep -oHE '`(playbooks|templates)/[^`]*\.md`')
 
 # 2. Each playbook opens with frontmatter whose name is its basename and that has a description.
 for f in playbooks/*.md; do
@@ -28,7 +29,7 @@ private+='|AKIA[0-9A-Z]{16}|(^|[^A-Za-z0-9])sk-[A-Za-z0-9_-]{20,}|gh[pousr]_[A-Z
 private+='|xox[abprs]-[A-Za-z0-9-]{10,}|AIza[0-9A-Za-z_-]{35}|-----BEGIN [A-Z ]*PRIVATE KEY-----'
 while IFS=: read -r file line _; do
   err "$file:$line: looks like private material"
-done < <(git ls-files -z ':!scripts/check-docs.sh' | xargs -0 grep -nIE "$private")
+done < <(git ls-files -z --cached --others --exclude-standard ':!scripts/check-docs.sh' | xargs -0 grep -nIE "$private")
 
 (( fail )) || echo "check-docs: ok"
 exit "$fail"
