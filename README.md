@@ -10,27 +10,21 @@ I'm an applied-AI consultant and part of a team, so most of my delivery runs thr
 
 If you want it to, this repo can load into your agent.
 
-
-- `OPERATOR.md` holds the global rules every session reads: the unit of work, the output contract, autonomy boundaries, the verification ladder, decision tiers, secrets and git discipline.
-- `playbooks/` holds situational playbooks that load on demand when a decision of that kind comes up (an architecture call, a stage promotion, a client deliverable, a session-end commit).
-- `templates/` holds the per-project rules file and the decision-record schema.
-
 ## Who it is for
 
-- Anyone putting AI agents into real delivery work who wants to see a governance layer that is in use, not one being proposed.
-- Teams that need repeatable deployment playbooks and want a concrete example of what "repeatable" means in practice: written down, versioned, measured against transcripts, revised after incidents.
+- Anyone putting AI agents into real delivery work who wants to see a governance layer that is in use.
+- Teams that need repeatable deployment playbooks and want a concrete example of what "repeatable" means in practice: written down, and rewritten when an incident showed a gap.
 - Me, as a public reference for how I manage AI output.
 
 ## The load-bearing ideas
 
-- **Unit of work is a client outcome, not a task.** A named client has an outcome; the agent gets it to production, verifies it, keeps git and docs current, and does not ask permission for the steps in between.
-- **Claims carry confidence tags.** `[VERIFIED]` (first-hand or official doc), `[LIKELY]`, `[UNVERIFIED]`. Error notifications and dashboards are claims, not facts.
-- **A verification ladder with no skipped rungs.** `TESTED` → `STAGED` → `VERIFIED` → `CONFIRMED`. "All tests pass" is `TESTED`. It is never `VERIFIED`.
-- **Decision tiers set who decides.** Tier 0 and 1: do it. Tier 2: write an audit-replayable decision record, then confirm. Tier 3 (money, production data, anything client-facing, anything sent under my name): hard stop.
-- **Align, then execute.** Before any long run the agent states its read of the goal, what it will build, and what would make it stop. Then it proceeds without waiting.
-- **Working systems stay.** Something running fine in production is not a candidate for improvement. Migrating it costs real delivery time to buy a property it already delivers.
-- **Match scope.** A bug fix is not a refactor. A one-shot is not a helper.
-- **Stage-gated ceremony.** Every repo declares `internal-solo`, `client-mvp` or `production`, and branching, CI and push rules follow from that line rather than from habit.
+- **Unit of work is a client outcome.** Get it to production, verify it, keep git and docs current. (top of `OPERATOR.md`)
+- **Claims carry confidence tags:** `[VERIFIED]`, `[LIKELY]`, `[UNVERIFIED]`. ([Output contract](OPERATOR.md#output-contract))
+- **No skipped rungs:** `TESTED` → `STAGED` → `VERIFIED` → `CONFIRMED`. ([Verification ladder](OPERATOR.md#verification-ladder))
+- **Decision tiers set who decides,** from "do it" to hard stop. ([Decision tiers](OPERATOR.md#decision-tiers))
+- **Align, then execute:** state the read, the build and the stop condition, then go. ([Autonomy](OPERATOR.md#autonomy-align-then-execute))
+- **Working systems stay, and scope matches the ask.** ([Output contract](OPERATOR.md#output-contract))
+- **The `STAGE:` line sets branch and CI ceremony.** ([Git and worktrees](OPERATOR.md#git-and-worktrees), `playbooks/stage-promotion.md`)
 
 ## What it looks like
 
@@ -106,11 +100,11 @@ Give me your alignment preamble for adding a hello-world script with one test, t
 
 ## Where this came from
 
-These rules were not designed up front. They were written and rewritten over months of running Claude Code on real client deployments: a lending client's production system, on-prem boxes on client networks, internal automation, and the business-operations side of a consultancy (proposals, scope changes, handoff packets).
+I wrote and rewrote these rules over months of running Claude Code on real client deployments: a lending client's production system, on-prem boxes on client networks, internal automation, and the business-operations side of a consultancy (proposals, scope changes, handoff packets).
 
-The failure modes named in the rules were measured from session transcripts rather than guessed. The shell-discipline section exists because losing the working directory between commands was the single most frequent error class across months of sessions. The subagent fan-out trigger has an explicit number in it because, without one, a four-part task was serialized every time it was tried. The rule against commented copy-paste blocks exists because a commented block once broke a remote-machine restart halfway through.
+The failure modes named in the rules come from my session transcripts. The shell-discipline section exists because losing the working directory between commands was the single most frequent error class across months of sessions. The subagent fan-out trigger has an explicit number in it because, without one, a four-part task was serialized every time it was tried. The rule against commented copy-paste blocks exists because a commented block once broke a remote-machine restart halfway through.
 
-The public version strips client and prospect names, hostnames and network details, people's names other than mine, prices, and the dates of specific incidents. The lessons stay; the identifying details do not.
+The public version strips client and prospect names, hostnames and network details, people's names other than mine, prices, and the dates of specific incidents.
 
 This repo itself was assembled with an AI agent from the private originals, under the same rules it documents.
 
@@ -118,9 +112,9 @@ This repo itself was assembled with an AI agent from the private originals, unde
 
 ```
 README.md
-OPERATOR.md
+OPERATOR.md                 global rules every session reads
 playbooks/
-  engineering-bar.md        five pillars every architecture decision is graded against
+  engineering-bar.md        the pillars every architecture decision is graded against
   decision-record.md        the audit-replayable record for Tier-2 choices
   stage-promotion.md        internal-solo → client-mvp → production, and what changes
   execution-substrate.md    choosing where background work runs, with a measured kill-test
@@ -130,6 +124,10 @@ playbooks/
 templates/
   project-CLAUDE.md         per-repo rules file
   decision-record.md        blank decision record
+scripts/
+  check-docs.sh             checks the docs; CI runs it
+.github/workflows/
+  docs.yml                  runs scripts/check-docs.sh
 LICENSE                     MIT
 ```
 
