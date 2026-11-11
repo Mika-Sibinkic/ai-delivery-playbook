@@ -30,13 +30,16 @@ Categorize each entry into one of:
 
 Look for project markers and run the appropriate verification BEFORE staging. Only run if the marker is present in the touched paths' nearest project root.
 
-| Marker | Run | Pass criterion |
-|---|---|---|
-| `pytest.ini`, `pyproject.toml`, `tests/test_*.py` | `python3 -m pytest tests/ -v 2>&1 \| tail -30` | All pass |
-| `package.json` with `"test"` script | `npm test 2>&1 \| tail -20` | Exit 0 |
-| `Cargo.toml` | `cargo test 2>&1 \| tail -20` | Exit 0 |
-| `go.mod` | `go test ./... 2>&1 \| tail -20` | Exit 0 |
-| Modified Python source files | Quick import sweep on each file | All import |
+Run the line whose marker is present: `pytest.ini`, `pyproject.toml` or `tests/test_*.py` (pytest); `package.json` with a `"test"` script (npm); `Cargo.toml` (cargo); `go.mod` (go).
+
+```bash
+set -o pipefail; python3 -m pytest tests/ -v 2>&1 | tail -30
+set -o pipefail; npm test 2>&1 | tail -20
+set -o pipefail; cargo test 2>&1 | tail -20
+set -o pipefail; go test ./... 2>&1 | tail -20
+```
+
+Pass criterion: the line exits 0. Without `pipefail` the exit status is `tail`'s, which is 0 even when every test fails. If Python source files changed, also import each one; all must import.
 
 If verification fails: STOP, report the failure, do not commit. The operator can override with "commit anyway".
 
@@ -107,10 +110,9 @@ If the operator said "commit and hand off", always use the `*-HANDOFF` prefix.
 ## Step 6: execute the commit
 
 ```bash
-git commit -m "$(cat <<'EOF'
+set -o pipefail; git commit -F - <<'EOF' 2>&1 | tail -8
 <message body>
 EOF
-)" 2>&1 | tail -8
 ```
 
 Then verify:
@@ -125,14 +127,17 @@ Confirm the new commit hash appears at HEAD.
 
 Push decision follows the branch, not the phrasing. Read the project `CLAUDE.md` `STAGE:` line first.
 
-- Feature / task branch (`<operator>/*`, `audit/*`, any non-canonical branch): push automatically. Do not ask.
-- `dev` on an `internal-solo` repo: push automatically.
-- `main`, or any branch the project `CLAUDE.md` marks as auto-deploying to production: stop and confirm. This is Tier 3; it publishes.
+- Feature / task branch (`<operator>/*`, `audit/*`, any non-canonical branch): push automatically. Do not ask. `-u origin HEAD` sets the upstream on the first push, so a new branch never fails here:
+  ```bash
+  set -o pipefail; git push -u origin HEAD 2>&1 | tail -10
+  ```
+- `main` or `dev` on an `internal-solo` repo: push automatically, as `stage-promotion` says.
+- `main` on a `client-mvp` or `production` repo, or any branch the project `CLAUDE.md` marks as auto-deploying to production: stop and confirm. This is Tier 3; it publishes.
 - Unsure which is canonical → check the worktree conventions for that repo before pushing.
 
-When pushing:
+For `main` or `dev`:
 ```bash
-git push 2>&1 | tail -10
+set -o pipefail; git push 2>&1 | tail -10
 ```
 
 Never `--force` push without explicit instruction.
@@ -161,7 +166,7 @@ Pushed: <branch> -> origin   |   Push withheld: <branch> is a production branch,
 
 **Multiple unrelated change clusters.** If staged changes span multiple unrelated topics (e.g., a feature + a typo fix in another project), offer to split into multiple commits. Don't force it; ask.
 
-**No existing remote tracking.** If `git push` would fail because no upstream is set, ask before running `git push -u origin <branch>`.
+**`main` or `dev` with no upstream.** Ask before running `git push -u origin <branch>`. Feature branches set their own upstream in Step 7.
 
 **Detached HEAD or weird branch state.** STOP. Report the state. Don't commit on a detached HEAD without explicit instruction.
 
@@ -173,4 +178,4 @@ These come from the operator's persistent feedback across sessions and override 
 - Co-Authored-By line is mandatory on every commit.
 - HEREDOC for commit messages, never `-m "..."` with embedded newlines.
 - Never amend, never `--no-verify`, never `--force` without explicit ask.
-- Push feature branches automatically; confirm only before a push to a production branch.
+- Push feature branches automatically; confirm only before a push to `main` on a `client-mvp` or `production` repo, or to a branch that auto-deploys.
