@@ -16,7 +16,7 @@ Skip jargon you haven't defined. Skip pleasantries. Don't lecture. Guide.
 
 Never put `#` comments inside a command block. Explanation goes ABOVE the block, in prose; the block is a paste target, not a document. One command per line; if a step needs a value from the operator, use an obvious placeholder and say what it is above the block.
 
-A commented block once broke a remote-machine restart mid-sequence: pasted whole, the comment lines derailed the shell, and the sequence died halfway. Do not repeat it.
+A commented block once broke a remote-machine restart mid-sequence: pasted whole, the comment lines derailed the shell, and the sequence died halfway. Do not repeat it. In zsh (the macOS default) a pasted `#` line runs as a command unless `interactivecomments` is set; bash and PowerShell treat it as a comment.
 
 Wrong:
 ```
