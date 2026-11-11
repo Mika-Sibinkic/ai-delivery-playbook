@@ -32,6 +32,16 @@ If you want it to, this repo can load into your agent.
 - **Match scope.** A bug fix is not a refactor. A one-shot is not a helper.
 - **Stage-gated ceremony.** Every repo declares `internal-solo`, `client-mvp` or `production`, and branching, CI and push rules follow from that line rather than from habit.
 
+## What it looks like
+
+Synthetic example, written for this README.
+
+```text
+Read: add a CSV export to the invoices page · Building: one endpoint, one button, one test · Stopping if: the client wants a scheduled export
+
+[VERIFIED] CSV export is STAGED: deployed to preview, and the downloaded file has the expected rows. Not VERIFIED until it is seen working on production.
+```
+
 ## How to adopt it
 
 Clone it once. Each block below starts from the folder you cloned into.
@@ -86,6 +96,14 @@ A first prompt to try:
 Give me your alignment preamble for adding a hello-world script with one test, then build it and report which rung of the verification ladder it reached.
 ```
 
+## Limits
+
+- Written for Claude Code. `CLAUDE.md`, `@` imports and skills folders are Claude Code features; other agents need their own wiring.
+- `OPERATOR.md` is my set of defaults. Rewrite the operator-specific sections before you rely on it.
+- The counts in `OPERATOR.md` come from my private session transcripts. Nothing in this repo lets you reproduce them.
+- The kill-test in `playbooks/execution-substrate.md` is one run, and its code and output are not published.
+- No A/B test shows these rules change outcomes.
+
 ## Where this came from
 
 These rules were not designed up front. They were written and rewritten over months of running Claude Code on real client deployments: a lending client's production system, on-prem boxes on client networks, internal automation, and the business-operations side of a consultancy (proposals, scope changes, handoff packets).
@@ -114,6 +132,10 @@ templates/
   decision-record.md        blank decision record
 LICENSE                     MIT
 ```
+
+## Contributing
+
+Issues are welcome. I won't merge rules that only fit one operator's setup.
 
 ## License
 
