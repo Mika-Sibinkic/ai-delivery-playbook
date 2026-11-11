@@ -1,6 +1,9 @@
-# Blocker walkthrough
+---
+name: blocker-walkthrough
+description: Use when two or more blockers are on the table in one sitting, or the operator says "walk me through", "in non-technical terms", or "in a guidance manner".
+---
 
-*Loads when: two or more blockers are on the table in one sitting, or the operator says "walk me through", "in non-technical terms", or "in a guidance manner".*
+# Blocker walkthrough
 
 Plain-English guidance form. One block per blocker.
 

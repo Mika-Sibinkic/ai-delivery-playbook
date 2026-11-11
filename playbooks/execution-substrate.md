@@ -1,6 +1,9 @@
-# Choosing an execution substrate
+---
+name: execution-substrate
+description: 'Use when choosing where background or long-running work will execute in a NEW project or a NEW pipeline: durable execution, job queues, retries, scheduled work, agent orchestration. Does not apply to existing systems that already work.'
+---
 
-*Loads when: choosing where background or long-running work will execute in a NEW project or a NEW pipeline: durable execution, job queues, retries, scheduled work, agent orchestration. Does not apply to existing systems that already work.*
+# Choosing an execution substrate
 
 **Scope: new work only.** An existing pipeline that runs reliably is out of scope for this playbook, regardless of what the table below says. Working systems stay. Migrating something that works costs real delivery time and buys a property it is already delivering in practice.
 

@@ -1,6 +1,9 @@
-# Stage-gated branching policy
+---
+name: stage-promotion
+description: Use when a client demo is scheduled, a second human or contractor joins a project, a repo starts taking real users or revenue, or before pushing directly to main.
+---
 
-*Loads when: a client demo is scheduled, a second human or contractor joins a project, a repo starts taking real users or revenue, or before pushing directly to main.*
+# Stage-gated branching policy
 
 Branching workflow is graded by repo stage, not applied uniformly. Heavy branching ceremony on a solo scratch repo is waste; main-only on a paid-user repo is malpractice. Every project `CLAUDE.md` declares a stage at the top. The allowed values are `internal-solo`, `client-mvp` and `production`:
 
