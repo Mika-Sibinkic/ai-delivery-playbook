@@ -1,12 +1,14 @@
 # AI Delivery Playbook
 
-If you want some of what I would call "secret sauce" regarding how I lead ops and core dev for Null Systems, then this is the right place to be. These are rules and common frameworks that I run AI coding agents under on client deployments (MIND PRIVACY AND CLIENT DATA, SO NO NO NO CLOUD MODEL USAGE EVEN ON REPO READS/FORKS).
+Global rules, on-demand skills and templates for Claude Code, for anyone running AI coding agents on real client work.
+
+If you want some of what I would call "secret sauce" regarding how I lead ops and core dev for Null Systems, then this is the right place to be. These are rules and common frameworks that I run AI coding agents under on client deployments. The repo holds no client data and is safe to load into any agent; in client work, client data and message bodies stay off hosted models unless the client has approved it.
 
 ## What this is
 
-I'm an applied-AI consultant and part of a team, so most of my delivery runs through AI coding agents (really only Claude Code at this point because I love it) working in client repositories, against client infrastructure and live + in-use production data. The whole thesis behind this repo is that an LLM under some sort of rules like these ones produces VERIFIED outcomes, and important artifacts along the way like audit trails and git history that second engineer or contractor can absolutely understand and then pick up from.
+I'm an applied-AI consultant and part of a team, so most of my delivery runs through AI coding agents (really only Claude Code at this point because I love it) working in client repositories, against client infrastructure and live + in-use production data. The whole thesis behind this repo is that an LLM under some sort of rules like these ones produces VERIFIED outcomes, and important artifacts along the way like audit trails and git history that a second engineer or contractor can absolutely understand and then pick up from.
 
-If you want it to, this repo can load into your agent. Okay Claude, take it away.....
+If you want it to, this repo can load into your agent.
 
 
 - `OPERATOR.md` holds the global rules every session reads: the unit of work, the output contract, autonomy boundaries, the verification ladder, decision tiers, secrets and git discipline.
@@ -69,4 +71,4 @@ LICENSE                     MIT
 
 ## License
 
-MIT; She's all yours.
+MIT; she's all yours.
