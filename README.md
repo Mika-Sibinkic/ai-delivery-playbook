@@ -34,11 +34,57 @@ If you want it to, this repo can load into your agent.
 
 ## How to adopt it
 
-1. Copy `OPERATOR.md` to wherever your agent reads global instructions (for Claude Code, `~/.claude/CLAUDE.md`). Rewrite the operator-specific lines: who you are, what machines you run, which repos are production.
-2. Copy `templates/project-CLAUDE.md` into each repo root as `CLAUDE.md` and set the `STAGE:` line honestly. Unset means `internal-solo`.
-3. Install the files in `playbooks/` as on-demand skills, each with a one-line trigger describing when it fires. Do not paste them all into the global file; the global file stays short and the playbooks load when needed.
-4. Keep `templates/decision-record.md` at `.context/decisions/` (or `docs/decisions/`) and write one record per Tier-2 choice.
+Clone it once. Each block below starts from the folder you cloned into.
+
+```bash
+git clone https://github.com/Mika-Sibinkic/ai-delivery-playbook.git
+```
+
+1. Load `OPERATOR.md` into your global `~/.claude/CLAUDE.md`. Either merge it in by hand, or back up your file and import it:
+
+   ```bash
+   cd ai-delivery-playbook
+   mkdir -p ~/.claude
+   touch ~/.claude/CLAUDE.md
+   cp ~/.claude/CLAUDE.md ~/.claude/CLAUDE.md.bak
+   echo "@$PWD/OPERATOR.md" >> ~/.claude/CLAUDE.md
+   ```
+
+   The import points at the clone, so leave it where it is. Then rewrite the parts that describe me: the opening paragraph (who the operator is, the unit of work, the machines), **Git and worktrees**, **Output aimed at the operator's machine** and **Documents and client communication**.
+2. Copy `templates/project-CLAUDE.md` into each repo root as `CLAUDE.md` and set the `STAGE:` line honestly. Unset means `internal-solo`. If the repo already has a `CLAUDE.md`, merge the two.
+3. Install the playbooks as on-demand skills. The global file stays short and the playbooks load when a decision of that kind comes up. A skill you already have under the same name is left alone.
+
+   ```bash
+   cd ai-delivery-playbook
+   for f in playbooks/*.md; do
+     d="$HOME/.claude/skills/$(basename "$f" .md)"
+     [ -e "$d" ] || { mkdir -p "$d" && cp "$f" "$d/SKILL.md"; }
+   done
+   ls ~/.claude/skills/*/SKILL.md
+   ```
+
+4. For each Tier-2 choice, copy `templates/decision-record.md` to `docs/decisions/YYYY-MM-DD-<slug>.md` and fill it in.
 5. Revise after every incident. If the rules were followed and the incident still happened, the rules need a new line. If they were not followed, that is a process miss, and the transcript will show where.
+
+### Try it in a scratch repo
+
+This leaves your global config alone. Everything loads at project scope in a new temp folder. Approve the external import when Claude Code asks.
+
+```bash
+cd ai-delivery-playbook
+p="$PWD"
+cd "$(mktemp -d)"
+git init -q
+echo "@$p/OPERATOR.md" > CLAUDE.md
+for f in "$p"/playbooks/*.md; do mkdir -p ".claude/skills/$(basename "$f" .md)" && cp "$f" ".claude/skills/$(basename "$f" .md)/SKILL.md"; done
+claude
+```
+
+A first prompt to try:
+
+```text
+Give me your alignment preamble for adding a hello-world script with one test, then build it and report which rung of the verification ladder it reached.
+```
 
 ## Where this came from
 
