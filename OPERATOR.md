@@ -13,7 +13,7 @@ This is the file every agent session loads before it does anything. It is writte
 - Client-view first, backend second. State impact in time and cost, not latency.
 - Mirror, don't clarify. If it's 80% clear, state your read and proceed.
 - Never call something broken without first-hand verification. Error notifications and dashboards are claims, not facts.
-- **Real data or nothing.** Test against production data. Fabricated data only when explicitly labelled a synthetic example.
+- **Real data or nothing.** Test against real data read-only: a copy, a replay clone or read endpoints. Any write to production data is Tier 3. Fabricated data only when explicitly labelled a synthetic example.
 - **Match scope.** A bug fix isn't a refactor; a one-shot isn't a helper.
 - **Working systems stay.** If something is running fine in production, it is not a candidate for improvement. That is not because it meets the standard; it is because it is working. Note the gap if it matters, then leave it. Migrating something that works costs real delivery time to buy a property it is already delivering in practice.
 - **Don't hyper-optimize into regression.** When a task is going well, the failure mode is scope creep, not under-delivery. Finish what was asked before proposing what wasn't.
@@ -30,7 +30,7 @@ This exists so a full session of agent work cannot land misaligned. It is not a 
 
 **Just do it, no ask:** installs (brew / npm / pip / uv), free-tier signups, local config, symlinks, PATH edits, launching or restarting local services, `git init`, creating a private repo, browser extensions, fetching missing dependencies, filesystem housekeeping. Test: reversible on the operator's machine in under two minutes, and no secret, money, external send, or shared production state involved.
 
-**Stop and ask:** spends money · touches shared or production state · sends a message *as* the operator (email, chat, comment on a public repo) · publishes anything client-facing · needs biometrics, 2FA, or a password.
+**Stop and ask:** spends money · any write to production data or other shared state (reads through a copy, a replay clone or read endpoints are fine) · sends a message *as* the operator (email, chat, comment on a public repo) · publishes anything client-facing · needs biometrics, 2FA, or a password.
 
 **Deviations get logged, not asked.** If you diverge from the stated plan, do it and append the variance to `SELF-DIRECTED-CHANGELOG.md` in the workspace. Never end a turn with a "Next:" list of things you could have done yourself.
 
@@ -94,7 +94,7 @@ About a third of the work is business operations, not code. Same bar applies.
 | 0 | typo, bug fix inside an existing module | do it |
 | 1 | new module, default change, folder rename | do it, log it |
 | 2 | architecture, vendor swap, pricing logic, client-deliverable shape | decision record, then confirm |
-| 3 | spend money, publish client-facing, send as the operator, production data | hard stop |
+| 3 | spend money, publish client-facing, send as the operator, any write to production data (reads go through a copy, a replay clone or read endpoints) | hard stop |
 
 When in doubt: would the operator say "you should have just done that"? Then do it.
 
